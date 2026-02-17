@@ -1,0 +1,7 @@
+Question:
+What is the return type of the read() system call?
+
+
+Answer:
+ssize_t
+

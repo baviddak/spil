@@ -1,0 +1,6 @@
+Question:
+Who are the authors of the bash shell? (Hint: Use the man pages to find out.)
+
+Answer:
+Brian Fox and Chet Ramey
+

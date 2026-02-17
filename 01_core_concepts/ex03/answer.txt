@@ -1,0 +1,15 @@
+Question:
+Using the man pages find the names of all of the header files that you would 
+need to include to use the following functions in a program. There might be 
+more than one needed for some of these.
+
+(a) _exit()
+(b) setuid()
+(c) fstat()
+
+Answer:
+(a) unistd.h, stdlib.h
+(b) unistd.h
+(c) sys/stat.h, fcntl.h
+
+

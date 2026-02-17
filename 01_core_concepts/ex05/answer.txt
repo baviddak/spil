@@ -1,0 +1,7 @@
+Question:
+What command can be used to print the creation date of a file? (Hint: This 
+information is part of a file's status.)
+
+Answer:
+ls -l
+

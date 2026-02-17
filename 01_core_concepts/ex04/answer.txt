@@ -1,0 +1,6 @@
+Question:
+If your current owrking directory is /usr/share/gcc/python, what is the 
+shortest relative pathname of the file /usr/lib32/libc.so.6?
+
+Answer:
+../../../lib32/libc.so.6

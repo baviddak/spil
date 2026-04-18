@@ -38,9 +38,9 @@ int main ( int argc, char *argv[] ) {
 
 		fprintf(stdout, "%s = %ld\n", argv[i], result);
 
-		/* Reset some values */
-		eptr = NULL;
-		errno = 0;
+		/* Reset some values - is this needed? */
+		// eptr = NULL;
+		// errno = 0;
 	}
 
 	exit(EXIT_SUCCESS);

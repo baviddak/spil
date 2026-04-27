@@ -32,7 +32,7 @@ int newer(const char *pathname1, const char *pathname2) {
 	modtime2_s = sb.st_mtim.tv_sec;
 	modtime2_ns = sb.st_mtim.tv_nsec;
 
-	/* printf("Time for pathname 1: %d, %lld\nTime for pathname 2: %d, %lld\n", modtime1_s, modtime1_ns, modtime2_s, modtime2_ns); */
+	printf("Time for pathname 1: %d, %lld\nTime for pathname 2: %d, %lld\n", modtime1_s, modtime1_ns, modtime2_s, modtime2_ns);
 
 	if ( modtime1_s == modtime2_s ) {
 
@@ -42,7 +42,7 @@ int newer(const char *pathname1, const char *pathname2) {
 			return 0;
 		}
 
-	} else if (modtime1_ns > modtime2_ns) {
+	} else if (modtime1_s > modtime2_s) {
 		return 1;
 	} else {
 		return 0;
@@ -57,12 +57,15 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	switch ( newer(argv[1], argv[2]) ) {
+	int ans = newer(argv[1], argv[2]);
+	printf("Return: %d\n", ans);
+
+	switch ( ans ) {
 		case 1:
-			printf("Newer file: %s\n", argv[2]);
+			printf("Newer file: %s\n", argv[1]);
 			break;
 		case 0:
-			printf("Newer file: %s\n", argv[1]);
+			printf("Newer file: %s\n", argv[2]);
 			break;
 		default:
 			printf("Error\n");

@@ -59,7 +59,6 @@ int main () {
 	printsigset(mysigset);
 
 	/* Remove some signals and retest */
-
 	sigdelset(&mysigset, 5);
 	sigdelset(&mysigset, 10);
 	sigdelset(&mysigset, 15); 

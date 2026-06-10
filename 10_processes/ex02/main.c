@@ -32,7 +32,6 @@ void construct_pid_lineage(struct pidlineage *pidl, pid_t pd) {
 			break;
 		}
 	}
-
 }
 
 
@@ -64,8 +63,6 @@ int main(int argc, char *argv[]) {
 	construct_pid_lineage(&p1_lin, p1);
 	construct_pid_lineage(&p2_lin, p2);
 
-
-
 	bool breakout = false;
 	for ( int i = 0; i < p1_lin.size; i++) {
 		for ( int j = 0; j < p2_lin.size; j++) {
@@ -79,7 +76,6 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 	}
-
 
 	return 0;
 }

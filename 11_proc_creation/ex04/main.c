@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <signal.h>
 
 #define MAX_CHILDREN 128
 
@@ -21,6 +22,14 @@ void add_list_child(pid_t child_pid, struct child_list *ch_list) {
 	ch_list->children[ch_list->size] = child_pid;
 	ch_list->size++;
 	return;
+}
+
+
+/* Exit function to print good-bye message */
+void goodbye(int signo, siginfo_t *info, void *context) {
+	fprintf(stdout, "Process %d terminated\n", getpid());
+
+	_exit(EXIT_SUCCESS);
 }
 
 
@@ -47,6 +56,7 @@ int main (int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
+
 	struct child_list new_cl;
 	new_cl.size = 0;
 
@@ -59,6 +69,15 @@ int main (int argc, char *argv[]) {
 			case 0:
 				/* Child process */
 				fprintf(stdout, "PID child %d: %d\n", i, getpid());
+
+				struct sigaction sa;
+				sa.sa_flags = SA_SIGINFO;
+				sa.sa_sigaction = &goodbye;
+
+				if ( -1 == sigaction(SIGTERM, &sa, NULL) ) {
+					fprintf(stderr, "Error in sigaction(): %s\n", strerror(errno));
+				}
+
 				pause();
 				break;
 			default:
@@ -69,13 +88,12 @@ int main (int argc, char *argv[]) {
 
 	}
 
-	for (int i = 0; i < new_cl.size; i++ ) {
-		fprintf(stdout, "The pid is %d\n", new_cl.children[i]);
-	}
+	sleep(10);
 
-	/*
-	 * Work in progress
-	 */
+	/* Send SIGTERM to all children */
+	for (int i = 0; i < new_cl.size; i++ ) {
+		kill(new_cl.children[i], SIGTERM);
+	}
 
 	exit(EXIT_SUCCESS);
 }

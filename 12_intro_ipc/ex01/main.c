@@ -23,7 +23,7 @@ int main () {
 	
 	/* Loop until sem_post gets an overflow error - then we have reached the limit */
 	while ( 1 ) {
-		if ( sem_post(&sem) == -1 ) {
+		if ( sem_post(&sem) == -1 && errno == EOVERFLOW ) {
 			fprintf(stderr, "Error in sem_post(): %s\n", strerror(errno));
 			break;
 		} else {
@@ -35,6 +35,7 @@ int main () {
 			exit(EXIT_FAILURE);
 		}
 	}	
+	
 	fprintf(stdout, "\nThe maximum value that a semaphore can have on this system is %d\n", current_sem_val);
 
 	exit(EXIT_SUCCESS);

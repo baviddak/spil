@@ -9,6 +9,11 @@
 
 int main (int argc, char *argv[]) {
 
+	if ( argc != 2 ) {
+		fprintf(stderr, "Usage: ./snooze <seconds>\n");
+		exit(EXIT_FAILURE);
+	}
+
 	double waittime = atof(argv[1]);
 
 	int cycles = waittime * 10;

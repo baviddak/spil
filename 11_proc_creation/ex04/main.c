@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+/* This is a comment */
+
 #define MAX_CHILDREN 128
 
 struct child_list {

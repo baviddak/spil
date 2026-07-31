@@ -37,7 +37,6 @@ int main ( int argc, char * argv[] ) {
 		fprintf(stderr, "Error in mq_open(): %s\n", strerror(errno));
 		exit(EXIT_SUCCESS);
 	}
-	
 
 	/* Initialize the message buffer */
 	char buf[MSG_SIZE];	
@@ -53,6 +52,5 @@ int main ( int argc, char * argv[] ) {
 		fprintf(stdout, "Message successfully sent!\n");
 	}
 	
-
 	exit(EXIT_SUCCESS);
 }

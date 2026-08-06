@@ -2,8 +2,49 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 #include "mypopenclose.h"
+
+static struct child_pipe *cpipes[CHILD_PIPES_MAX];
+
+static void add_cpipe(int fd, pid_t pd) {
+
+	for ( int i = 0; i < CHILD_PIPES_MAX; i++ ) {
+		if ( cpipes[i] == NULL ) {
+			/* Debug */
+			printf("Adding fd %d and pid %d to the list\n", fd, pd);
+			cpipes[i] = (struct child_pipe *)malloc(sizeof(struct child_pipe));
+			cpipes[i]->fd = fd;
+			cpipes[i]->pd = pd;
+			break;
+		}
+	}
+	
+}
+
+static pid_t findpd(int fd) {
+	
+	for ( int i = 0; i < CHILD_PIPES_MAX; i++ ) {
+		if ( cpipes[i] != NULL ) {
+			if ( cpipes[i]->fd == fd ) {
+				return cpipes[i]->pd;
+			}	
+		}
+	}
+	return (pid_t)-1;
+}
+
+static void remove_cpipe(int fd) {
+	
+	for ( int i = 0; i < CHILD_PIPES_MAX; i++ ) {
+		if ( cpipes[i] != NULL ) {
+			if ( cpipes[i]->fd == fd ) {
+				free(cpipes[i]);
+			}	
+		}
+	}
+}
 
 FILE *mypopen(const char *command, const char *type) {
 	
@@ -67,6 +108,9 @@ FILE *mypopen(const char *command, const char *type) {
 
 				/* Close the read end in the parent */
 				close(pfd[0]);
+			
+				/* Add the file descriptor and pid association to our tracker */
+				add_cpipe(pfd[1], pd);
 
 				nfp = fdopen(pfd[1], "w");
 				return nfp;
@@ -75,6 +119,9 @@ FILE *mypopen(const char *command, const char *type) {
 
 				/* Close the write end of the parent */
 				close(pfd[1]);
+	
+				/* Add the file descriptor and pid association to our tracker */
+				add_cpipe(pfd[0], pd);
 
 				nfp = fdopen(pfd[0], "r");
 				return nfp;
@@ -90,12 +137,31 @@ FILE *mypopen(const char *command, const char *type) {
 
 int mypclose(FILE *stream) {
 
-	int exit_status;
-	pid_t child_id;
+	int child_fd;
+	
+	/* find the fd of pipe */
+	if ( -1 == (child_fd = fileno(stream) ) ) {
+		fprintf(stderr, "Error in fileno(): %s\n", strerror(errno));
+	}
 
-	if ( -1 == ( child_id = wait(&exit_status) ) ) {
+	/* find the associated pid */
+
+	int exit_status;
+	pid_t child_pid;
+
+	child_pid = findpd(child_fd);
+
+	if ( kill(child_pid, SIGKILL) == -1 ) {
+		fprintf(stderr, "Error in kill(): %s\n", strerror(errno));
+		return -1;
+	}
+
+	if ( waitpid(child_pid, &exit_status, 0) == -1 ) {
 		fprintf(stderr, "Error in wait(): %s\n", strerror(errno));
 		return -1;
 	}
+
+	remove_cpipe(child_fd);
+	
 	return exit_status;
 }

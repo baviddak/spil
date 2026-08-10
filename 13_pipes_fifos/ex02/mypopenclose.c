@@ -151,7 +151,7 @@ int mypclose(FILE *stream) {
 
 	child_pid = findpd(child_fd);
 
-	if ( kill(child_pid, SIGKILL) == -1 ) {
+	if ( kill(child_pid, SIGINT) == -1 ) {
 		fprintf(stderr, "Error in kill(): %s\n", strerror(errno));
 		return -1;
 	}

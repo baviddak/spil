@@ -31,6 +31,7 @@ void *search_array(void *arg) {
 	/* Write the result to the result value in the struct */
 
 	task_data *td = (task_data *)arg;	
+	td->result = -1;
 
 	for (int i = td->first; i < td->last; i++) {
 		if ( td->array[i] == td->target ) {
@@ -38,13 +39,13 @@ void *search_array(void *arg) {
 			td->result = i;
 			/* Set the global var */
 			
-			pthread_exit((void *)td);
 		}
 		
 	}
+	pthread_exit((void *)td);
 }
 
-static volatile task_data *gtd = NULL;
+
 
 int main(int argc, char *argv[] ) {
 
@@ -117,8 +118,8 @@ int main(int argc, char *argv[] ) {
 		}
 	}
 
+	/* Incomplete! Unsure about this one */
 	
-
 	
 	exit(EXIT_SUCCESS);
 }

@@ -100,7 +100,8 @@ int main(int argc, char *argv[] ) {
 		current = strtok(NULL, " ");
 	}
 
-	int nthreads = get_nprocs();	
+
+	int nthreads = get_nprocs() - 2; /* Don't actually use all threads haha */
 	
 	task_data thread_data[MAX_THREADS];	
 

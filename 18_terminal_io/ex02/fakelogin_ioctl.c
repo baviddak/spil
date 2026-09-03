@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);	
 	}
 	tt.c_lflag |= ECHO; /* Turn echo on. */
+
 	/* tcsetattr(ttyfd, TCSAFLUSH, &tt); */
 	if ( ioctl(ttyfd, TCSETSF, &tt) == -1 ) {
 		fprintf(stderr, "Error in ioctl(): %s\n", strerror(errno));
